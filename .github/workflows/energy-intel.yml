@@ -1,0 +1,38 @@
+name: Energy Intel Digest
+
+on:
+  schedule:
+    # 05:00 and 11:00 JST are 20:00 and 02:00 UTC.
+    - cron: '0 20 * * *'
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+
+jobs:
+  digest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Energy Intel Digest
+        run: npm run energy:intel
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+          GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+          GOOGLE_REFRESH_TOKEN: ${{ secrets.GOOGLE_REFRESH_TOKEN }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          ENERGY_INTEL_SPREADSHEET_ID: 1ovlkKK6EKxM4Lr75ngR1cceHf6pV6hpfCEl_wct03VY
+          ENERGY_INTEL_CONFIG_SHEET: config
+          ENERGY_INTEL_SLACK_CHANNEL: '#energy-intel'

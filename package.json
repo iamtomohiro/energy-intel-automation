@@ -1,0 +1,11 @@
+{
+  "scripts": {
+    "energy:intel": "node scripts/energy-intel-digest.js",
+    "google:auth": "node scripts/google-oauth-local.js"
+  },
+  "dependencies": {
+    "dotenv": "^17.3.1",
+    "googleapis": "^169.0.0",
+    "openai": "^6.32.0"
+  }
+}
