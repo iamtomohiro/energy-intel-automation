@@ -114,6 +114,16 @@ function getHeader(headers, name) {
   return headers.find((h) => h.name.toLowerCase() === name.toLowerCase())?.value || '';
 }
 
+function validateEnvironment() {
+  [
+    'OPENAI_API_KEY',
+    'GOOGLE_CLIENT_ID',
+    'GOOGLE_CLIENT_SECRET',
+    'GOOGLE_REFRESH_TOKEN',
+    'SLACK_WEBHOOK_URL',
+  ].forEach(requireEnv);
+}
+
 async function getAuth() {
   const oauth2Client = new google.auth.OAuth2(
     requireEnv('GOOGLE_CLIENT_ID'),
@@ -247,7 +257,10 @@ async function fetchLatestMessage(gmail, source, afterIso) {
     details.push(full.data);
   }
 
-  const freshDetails = details.filter((item) => Number(item.internalDate) > afterMillis);
+  const freshDetails = details.filter((item) => {
+    const subject = getHeader(item.payload.headers || [], 'Subject');
+    return Number(item.internalDate) > afterMillis && !isAdministrativeEmail(subject);
+  });
   if (!freshDetails.length) return null;
 
   freshDetails.sort((a, b) => Number(b.internalDate) - Number(a.internalDate));
@@ -266,6 +279,25 @@ async function fetchLatestMessage(gmail, source, afterIso) {
     from: getHeader(latest.payload.headers || [], 'From'),
     body,
   };
+}
+
+function isAdministrativeEmail(subject = '') {
+  const normalized = subject.toLowerCase();
+  return [
+    'confirm',
+    'confirmation',
+    'verify',
+    'verification',
+    'welcome',
+    'password',
+    'login',
+    'sign in',
+    'メールアドレスの確認',
+    '認証',
+    '確認コード',
+    'パスワード',
+    'ログイン',
+  ].some((keyword) => normalized.includes(keyword.toLowerCase()));
 }
 
 function extractSection(markdown, heading) {
@@ -347,6 +379,8 @@ async function appendOutput(sheets, sheetName, values) {
 }
 
 async function main() {
+  validateEnvironment();
+
   const auth = await getAuth();
   const sheets = await getSheets(auth);
   const gmail = await getGmail(auth);
