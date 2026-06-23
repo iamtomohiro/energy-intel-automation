@@ -36,3 +36,4 @@ jobs:
           ENERGY_INTEL_SPREADSHEET_ID: 1ovlkKK6EKxM4Lr75ngR1cceHf6pV6hpfCEl_wct03VY
           ENERGY_INTEL_CONFIG_SHEET: config
           ENERGY_INTEL_SLACK_CHANNEL: '#energy-intel'
+          ENERGY_INTEL_MODEL: gpt-4o

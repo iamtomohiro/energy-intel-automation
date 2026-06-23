@@ -12,7 +12,7 @@ const CONFIG = {
   outputSheet: process.env.ENERGY_INTEL_OUTPUT_SHEET || 'all_outputs',
   batchSize: Number(process.env.ENERGY_INTEL_BATCH_SIZE || 3),
   defaultSlackChannel: process.env.ENERGY_INTEL_SLACK_CHANNEL || '#energy-intel',
-  model: process.env.ENERGY_INTEL_MODEL || 'gpt-5.2',
+  model: process.env.ENERGY_INTEL_MODEL || 'gpt-4o',
 };
 
 const STATE_HEADERS = ['key', 'value', 'updated_at'];
