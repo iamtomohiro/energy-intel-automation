@@ -289,6 +289,12 @@ function isAdministrativeEmail(subject = '') {
     'verify',
     'verification',
     'welcome',
+    'thank you for signing up',
+    'signing up',
+    'subscribed',
+    'subscription confirmed',
+    'preferences',
+    'newsletter preferences',
     'password',
     'login',
     'sign in',
@@ -307,8 +313,23 @@ function extractSection(markdown, heading) {
 
 async function analyzeNewsletter(source, message) {
   const client = new OpenAI({ apiKey: requireEnv('OPENAI_API_KEY') });
-  const system = `You are an energy and power-sector strategy consultant. Write in Japanese. Markdown section headings must be English. Separate Fact, Interpretation, Implication, and Next Action. Include Executive Summary, Why It Matters, Client Relevance, Consultant Questions, and Terms. Do not invent facts.`;
-  const user = `Analyze this newsletter for an energy strategy consultant.
+  const system = `You are a world-class energy and power-sector strategy consultant.
+
+Hard language rule:
+- Write the entire answer in Japanese.
+- Only Markdown section headings must remain in English, such as "## Fact".
+- Do not write English prose except unavoidable original proper nouns, source names, and English terms in the Terms table.
+
+Analytical standard:
+- Do not produce a generic newsletter summary.
+- Treat the email as raw intelligence for strategy consulting.
+- Separate Fact, Interpretation, Implication, and Next Action.
+- Facts must be grounded in the email.
+- Interpretation and Implication may infer from facts, but clearly indicate uncertainty where applicable.
+- Write enough detail to satisfy a senior energy strategy consultant.
+- Consider market structure, regulation, grid constraints, financing, technology adoption, customer behavior, competitive positioning, and second-order effects where relevant.
+- If the email is a welcome, confirmation, signup, password, login, preference-setting, or administrative email, return "NO_ACTIONABLE_NEWSLETTER" only.`;
+  const user = `以下のニュースレターを、電力・エネルギー領域の戦略コンサルタント向けに分析してください。
 
 Source metadata:
 - feed_name: ${source.feed_name}
@@ -338,7 +359,20 @@ Return exactly these Markdown sections:
 ## Next Action
 ## Terms
 ## Watchlist
-## Confidence`;
+## Confidence
+
+Detailed output requirements:
+- Body text must be Japanese. Headings only are English.
+- Executive Summary: 4-6 bullets. Each bullet should include the strategic meaning, not only the news event.
+- Why It Matters: 2-4 paragraphs. Explain why this matters for energy-sector strategy, not just why it is interesting.
+- Fact: 5-10 bullets. Only write what the email explicitly says.
+- Interpretation: 4-8 bullets. Connect facts to power markets, policy, grid, competition, financing, technology adoption, or customer behavior.
+- Implication: 4-8 bullets. Explain what may change for clients and which client types are affected.
+- Client Relevance: write separate, practical implications for utilities/power companies, developers/IPPs, large energy users, investors/lenders, and policy/public sector.
+- Consultant Questions: 5-8 meeting-ready questions. These should be usable in a client meeting or internal case team discussion.
+- Next Action: 5-8 concrete actions, including what to research, who to interview, and which indicators/datasets to monitor.
+- Terms: Use a Markdown table with columns "English", "Japanese", and "Explanation". Explanation must be an easy-to-understand Japanese sentence explaining what the term means and why it matters in this context.
+- Confidence: Include a short Japanese explanation of source quality and uncertainty.`;
 
   const response = await client.chat.completions.create({
     model: CONFIG.model,
@@ -347,7 +381,7 @@ Return exactly these Markdown sections:
       { role: 'user', content: user },
     ],
     temperature: 0.4,
-    max_completion_tokens: 2500,
+    max_completion_tokens: 4000,
   });
 
   return response.choices[0].message.content.trim();

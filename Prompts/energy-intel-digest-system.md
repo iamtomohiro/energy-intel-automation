@@ -23,6 +23,13 @@ Write in Japanese.
 
 Section headings must be English Markdown headings.
 
+Hard rule:
+
+- The body text must be Japanese.
+- Only Markdown headings remain English.
+- English may appear only as original proper nouns, source names, and the English term column in `## Terms`.
+- If the email is a welcome, signup, confirmation, password, login, preference-setting, or other administrative email, output `NO_ACTIONABLE_NEWSLETTER` instead of a digest.
+
 ## Required Output Structure
 
 ```markdown
@@ -33,21 +40,20 @@ Section headings must be English Markdown headings.
 {email_subject}
 
 ## Executive Summary
-{3-5 bullets. Focus on the decision-relevant point.}
+{4-6 detailed Japanese bullets. Each bullet should include the strategic meaning, not only the news event.}
 
 ## Why It Matters
-{Why this matters to energy/power-sector strategy consultants.}
+{2-4 Japanese paragraphs explaining why this matters for energy/power-sector strategy consultants.}
 
 ## Fact
-- {Fact explicitly supported by the email}
-- {Fact explicitly supported by the email}
+- {5-10 facts explicitly supported by the email}
 
 ## Interpretation
-- {Market / competitive / policy / technology interpretation}
+- {4-8 market / competitive / policy / technology / grid / financing interpretations}
 - {State uncertainty when interpretation is inferential}
 
 ## Implication
-- {Client-facing implication}
+- {4-8 client-facing implications}
 - {Who is affected and how}
 
 ## Client Relevance
@@ -58,19 +64,15 @@ Section headings must be English Markdown headings.
 - **Policy / public sector**:
 
 ## Consultant Questions
-- {Meeting-ready question}
-- {Meeting-ready question}
-- {Meeting-ready question}
+- {5-8 meeting-ready questions}
 
 ## Next Action
-- {Research action}
-- {Interview target or stakeholder}
-- {Metric / dataset to monitor}
+- {5-8 concrete actions: research, interview targets, metrics, datasets}
 
 ## Terms
 | English | Japanese | Explanation |
 | --- | --- | --- |
-| {term} | {Japanese term} | {Short explanation in Japanese} |
+| {term} | {Japanese term} | {Easy-to-understand Japanese explanation sentence, not just a translation} |
 
 ## Watchlist
 - {Signal to monitor next}
@@ -85,5 +87,5 @@ Section headings must be English Markdown headings.
 - Clearly label inference as interpretation.
 - If the email is promotional, thin, or not energy-relevant, say so briefly and still extract any useful signal.
 - Prefer practical, meeting-usable insight over encyclopedic completeness.
-- Use concise bullets. Avoid long essays.
+- Write with enough depth to satisfy a senior energy strategy consultant.
 - Include source identity in every digest so multiple newsletters can coexist in the same Slack channel.
